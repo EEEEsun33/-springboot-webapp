@@ -1,0 +1,153 @@
+
+
+CREATE TABLE `buyer_info` (
+`buyer_id` int NOT NULL COMMENT '涔板淇℃伅琛╥d',
+`username` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '濠电偞鍨跺鐟邦熆濮椻偓椤㈡瑥顓兼径濠呅曢悗骞垮劚濞?',
+`password` varchar(332) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '涔板瀵嗙爜',
+`phone` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '涔板鎵嬫満鍙?',
+`create_time` timestamp NULL DEFAULT 'CURRENT_TIMESTAMP' COMMENT '閸掓稑缂撻弮鍫曟？',
+`update_time` timestamp NULL DEFAULT 'CURRENT_TIMESTAMP' COMMENT '娣囶喗鏁奸弮鍫曟？',
+PRIMARY KEY (`buyer_id`) 
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
+COMMENT='买家信息表'
+;
+
+
+CREATE TABLE `comment` (
+`comment_id` int NOT NULL COMMENT '涔板璇勮琛?',
+`comment_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '璇勮鑰呭鍚?',
+`buyer_id` int NOT NULL COMMENT '閻犲洤瀚鎴︽嚀閸涱垱鐣眔penid',
+`comment_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '璇勮鍐呭',
+`create_time` timestamp NOT NULL DEFAULT 'CURRENT_TIMESTAMP' COMMENT '璇勮鏃堕棿',
+`order_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+PRIMARY KEY (`comment_id`) ,
+CONSTRAINT `buyer_id` FOREIGN KEY (`buyer_id`) REFERENCES `buyer_info` (`buyer_id`),
+INDEX `buyer_id` (`buyer_id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
+COMMENT='评论信息表'
+;
+
+
+CREATE TABLE `notice` (
+`notice_id` int NOT NULL,
+`notice_title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+`notice_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+`notice_editor` int NOT NULL,
+`create_time` timestamp NOT NULL COMMENT '鍏憡琛?',
+PRIMARY KEY (`notice_id`) ,
+CONSTRAINT `notice_editor` FOREIGN KEY (`notice_editor`) REFERENCES `seller_info` (`seller_id`),
+INDEX `notice_editor` (`notice_editor`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+;
+
+
+CREATE TABLE `order_detail` (
+`detail_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '璁㈠崟璇︽儏琛ㄧ殑id',
+`order_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '璁㈠崟id',
+`product_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '鍟嗗搧id',
+`product_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '鍟嗗搧鍚嶇О',
+`product_price` decimal(8,2) NOT NULL COMMENT '鍟嗗搧浠锋牸',
+`product_quantity` int NOT NULL COMMENT '鍟嗗搧鏁伴噺',
+`product_icon` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '鍟嗗搧鍥剧墖',
+`create_time` timestamp NOT NULL DEFAULT 'CURRENT_TIMESTAMP' COMMENT '鍒涘缓鏃堕棿',
+`update_time` timestamp NOT NULL DEFAULT 'CURRENT_TIMESTAMP' COMMENT '淇敼鏃堕棿',
+PRIMARY KEY (`detail_id`) ,
+INDEX `idx_order_id` (`order_id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
+COMMENT='订单详情表'
+;
+
+
+CREATE TABLE `order_master` (
+`order_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '璁㈠崟id',
+`buyer_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '涔板鍚嶇О',
+`buyer_phone` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '涔板鐢佃瘽',
+`buyer_address` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '涔板鍦板潃',
+`buyer_id` int NOT NULL COMMENT '娑旀澘顔嶅顔讳繆閻ㄥ埣penid',
+`order_amount` decimal(8,2) NOT NULL COMMENT '璁㈠崟鎬婚噾棰?',
+`order_status` tinyint NOT NULL DEFAULT 0 COMMENT '璁㈠崟鐘舵€?, 榛樿0涓烘柊璁㈠崟',
+`pay_status` tinyint NOT NULL DEFAULT 0 COMMENT '鏀粯鐘舵€?, 榛樿0涓烘湭鏀粯',
+`create_time` timestamp NOT NULL DEFAULT 'CURRENT_TIMESTAMP' COMMENT '鍒涘缓鏃堕棿',
+`update_time` timestamp NOT NULL DEFAULT 'CURRENT_TIMESTAMP' COMMENT '淇敼鏃堕棿',
+PRIMARY KEY (`order_id`) ,
+CONSTRAINT `order_buyer_id` FOREIGN KEY (`buyer_id`) REFERENCES `buyer_info` (`buyer_id`),
+INDEX `idx_buyer_openid` (`buyer_id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
+COMMENT='订单表'
+;
+
+
+CREATE TABLE `product_category` (
+`category_id` int NOT NULL COMMENT '绫荤洰id',
+`category_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '绫荤洰鍚嶇О',
+`create_time` timestamp NOT NULL DEFAULT 'CURRENT_TIMESTAMP' COMMENT '鍒涘缓鏃堕棿',
+`update_time` timestamp NOT NULL DEFAULT 'CURRENT_TIMESTAMP' COMMENT '淇敼鏃堕棿',
+`category_type` int NULL DEFAULT NULL,
+PRIMARY KEY (`category_id`) 
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
+COMMENT='类目表'
+;
+
+
+CREATE TABLE `product_info` (
+`product_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '鍟嗗搧id',
+`product_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '鍟嗗搧鍚嶇О',
+`product_price` decimal(8,2) NOT NULL COMMENT '鍟嗗搧鍗曚环',
+`product_stock` int NOT NULL COMMENT '搴撳瓨',
+`product_icon` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '鍟嗗搧鍥剧墖',
+`product_description` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '鍟嗗搧鎻忚堪',
+`product_status` tinyint NULL DEFAULT 0 COMMENT '鍟嗗搧鐘舵€?, 0姝ｅ父 , 1涓嬫灦',
+`category_id` int NOT NULL COMMENT '缁崵娲扮紓鏍у娇',
+`create_time` timestamp NOT NULL DEFAULT 'CURRENT_TIMESTAMP' COMMENT '鍒涘缓鏃堕棿',
+`update_time` timestamp NOT NULL DEFAULT 'CURRENT_TIMESTAMP' COMMENT '淇敼鏃堕棿',
+PRIMARY KEY (`product_id`) ,
+CONSTRAINT `category_id` FOREIGN KEY (`category_id`) REFERENCES `product_category` (`category_id`),
+INDEX `category_id` (`category_id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
+COMMENT='商品表'
+;
+
+
+CREATE TABLE `seller_info` (
+`seller_id` int NOT NULL COMMENT '鍟嗗淇℃伅琛╥d',
+`username` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '閸熷棗顔嶉崥宥囆?',
+`password` varchar(332) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '闁哥喎妫楅宥団偓闈涙閻?',
+`phone` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '鐢ㄦ埛鎵嬫満鍙?',
+`create_time` timestamp NOT NULL DEFAULT 'CURRENT_TIMESTAMP' COMMENT '鍒涘缓鏃堕棿',
+`update_time` timestamp NOT NULL DEFAULT 'CURRENT_TIMESTAMP' COMMENT '淇敼鏃堕棿',
+PRIMARY KEY (`seller_id`) 
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
+COMMENT='商家信息表'
+;
+
+
+CREATE TABLE `user` (
+`user_id` int NOT NULL,
+`create_time` datetime NULL DEFAULT NULL,
+`openid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+`update_time` datetime NULL DEFAULT NULL,
+`user_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+`user_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+`user_phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+`user_table` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+PRIMARY KEY (`user_id`) 
+)
+ENGINE=MyISAM
+DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+;
